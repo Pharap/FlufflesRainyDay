@@ -14,8 +14,8 @@ void MainMenu(){
 
 void GameInit(){
   objmngr.Reset();
-  objmngr.AddObject((Object){0,0,0,0,0,10,10,true});
-  objmngr.AddObject((Object){1,0,0,128,0,10,10,true});
+  objmngr.AddObject({ ObjectType::Fluffles, 0, 0, 0, 0, 10, 10, true });
+  objmngr.AddObject({ ObjectType::Tree, 0, 0, 128, 0, 10, 10, true });
   gamestate = GameState::GamePlay;
 }
 

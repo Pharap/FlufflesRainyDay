@@ -1,8 +1,17 @@
 #pragma once
-#define FramesPerAnimUpdate 10
-#define MAXOBJECTS 10
-#define MAXOBJECTTYPE 4
-#define IntType uint16_t
+
+// For size_t
+#include <stddef.h>
+
+// For uint8_t, uint16_t, ...
+#include <stdint.h>
+
+constexpr uint8_t FramesPerAnimUpdate = 10;
+constexpr size_t MAXOBJECTS = 10;
+constexpr size_t MAXOBJECTTYPE = 4;
+
+using IntType = uint16_t;
+
 #include "Object.h"
 
 class ObjectManager{
@@ -27,7 +36,7 @@ void ObjectManager::Update(){
   for(IntType i = 0; i < MAXOBJECTS; i++){
     if(Objects[i].Active)
     {
-      RunFunction(i,&Objects[i],this);
+      RunFunction(&Objects[i], this);
     }
   }
 }
@@ -36,7 +45,7 @@ void ObjectManager::Draw(){
   for(IntType i = 0; i < MAXOBJECTS; i++){
     if(Objects[i].Active)
     {
-      DrawFunction(i,&Objects[i],this);
+      DrawFunction(&Objects[i], this);
     }
   }
 }
@@ -56,6 +65,7 @@ bool ObjectManager::AddObject(Object obj){
 bool ObjectManager::RemoveObject(IntType i){
   if(i > MAXOBJECTS)
       return false;
+
   Objects[i].Active = false;
   return true;
 }
@@ -70,5 +80,5 @@ void ObjectManager::Reset(){
 }
 
 bool ObjectManager::UpdateFrameCount(){
-  return FrameCounter == FramesPerAnimUpdate - 1;
+  return (FrameCounter == (FramesPerAnimUpdate - 1));
 }

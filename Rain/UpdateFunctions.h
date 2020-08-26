@@ -1,58 +1,60 @@
 #pragma once
 
+#include "Object.h"
+#include "ObjectManager.h"
 
-void UpdateFluffles(Object* obj, ObjectManager* handler)
+void UpdateFluffles(Object* obj, ObjectManager* manager)
 {
   if(ard.justPressed(UP_BUTTON))
   {
     if(obj->Y > 0)
-      obj->Y-=18;    
+      obj->Y -= 18;
   }
 
   if(ard.justPressed(DOWN_BUTTON))
   {
     if(obj->Y < 36)
-      obj->Y+=18;    
+      obj->Y += 18;
   }
 
   if(ard.justPressed(A_BUTTON))
   {
-    
-    obj->State = 1;    
+    obj->State = 1;
   }
 
   if(ard.justPressed(B_BUTTON))
   {
-    
-    obj->State = 0;    
+    obj->State = 0;
   }
   
-  if(handler->UpdateFrameCount())
+  if(manager->UpdateFrameCount())
   {
     obj->FrameData++;
-    obj->FrameData%=4;
+    obj->FrameData %= 4;
   }
 }
 
-void UpdateTree(Object* obj, ObjectManager* handler)
+void UpdateTree(Object* obj, ObjectManager* manager)
 {
     obj->X--;
 
     if(obj->X < 20)
     {
       obj->Active = false;
-      handler->AddObject((Object){1,1,0,200,0,true});
+      manager->AddObject({ ObjectType::Tree, 0, 0, 1, 0, 200, 0, true });
     }  
 }
 
-
-using UpdateObjectFunction = void(*)(Object *, ObjectManager* );
-UpdateObjectFunction UpdateFunctionArray[MAXOBJECTTYPE] {UpdateFluffles,UpdateTree};
-
-void RunFunction(uint8_t id, Object * object, ObjectManager* handler)
+void RunFunction(Object * object, ObjectManager * manager)
 {
-  if(id > MAXOBJECTTYPE)
-    return;
-
-  UpdateFunctionArray[id](object, handler);
+  switch(object->Type)
+  {
+    case ObjectType::Fluffles:
+      UpdateFluffles(object, manager);
+      return;
+    
+    case ObjectType::Tree:
+      UpdateTree(object, manager);
+      return;
+  }
 }
